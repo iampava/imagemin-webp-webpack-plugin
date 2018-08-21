@@ -69,7 +69,7 @@ Type: `Object : {config: Array, detailedLogs: boolean}`<br/>
 
 Default:
 
-```json
+```
 {
   config: [{
     test: /\.(jpe?g|png)$/,

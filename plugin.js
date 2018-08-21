@@ -32,7 +32,7 @@ class ImageminWebpWebpackPlugin {
                                     .slice(0, -1)
                                     .join('/');
 
-                                imagemin([`${path}/${name}`], outputFolder, {
+                                imagemin([`${path}/${name}`], `${path}/${outputFolder}`, {
                                     plugins: [webp(this.config[i].options)]
                                 }).then(([{
                                     data,

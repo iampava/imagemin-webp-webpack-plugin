@@ -43,7 +43,7 @@ In order to use this plugin, add it to your **webpack config**.
   
 
 ```js
-const ImageminWebpWebpackPlugin= require("imagemin-web-webpack-plugin");
+const ImageminWebpWebpackPlugin= require("imagemin-webp-webpack-plugin");
 
 module.exports = {
     plugins: [new ImageminWebpWebpackPlugin()]

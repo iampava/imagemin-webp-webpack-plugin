@@ -65,7 +65,7 @@ module.exports = {
 
   
 
-Type: `Object : {config: Array, detailedLogs: boolean}`<br/>
+Type: `Object : {config: Array, detailedLogs: boolean, strict: boolean}`<br/>
 
 Default:
 
@@ -77,7 +77,8 @@ Default:
       quality:  75
     }
   }],
-  detailedLogs: false
+  detailedLogs: false,
+  strict: true
 }
 ```
 
@@ -97,9 +98,21 @@ The main config of the plugin which controls how different file types are conver
 Type: `boolean`<br>
 Default: `false`
 
-By default the plugin will print the total number of megabytes saved by the webp images compared to the original ones.
+By default the plugin will print 
 
-This options tells the plugin to also log the size difference per converted image.
+1. the total number of megabytes saved by the webp images compared to the original ones
+2. the number of images that failed being converted
+
+This options tells the plugin to also log the size difference per converted image and the names of the images that failed conversion.
+
+#### strict
+
+Type: `boolean`<br>
+Default: `true`
+
+By default the webpack build will fail if any of the images that match your RegExps fail the conversion.
+
+This option tells the plugin to not crash the build and keep going :)
 
 <hr/>
 

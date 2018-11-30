@@ -1,7 +1,12 @@
 {
     "name": "imagemin-webp-webpack-plugin",
-    "version": "1.0.2",
+    "version": "2.0.0",
     "description": "Webpack plugin which converts images to the WebP format while also keeping the original files.",
+    "author": {
+        "name": "Alexandru Pavaloi",
+        "email": "pava@iampava.com",
+        "url": "https://iampava.com"
+    },
     "license": "MIT",
     "main": "plugin.js",
     "keywords": [

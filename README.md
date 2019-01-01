@@ -1,35 +1,25 @@
-  
-
 # imagemin-webp-webpack-plugin
 
-  
-
+ 
 Webpack plugin which converts images to the [WebP](https://developers.google.com/speed/webp/) format while also keeping the original files.
 
 
 It uses [imagemin](https://www.npmjs.com/package/imagemin) and [imagemin-webp](https://www.npmjs.com/package/imagemin-webp) under the hood.
 
-  
-  
-
+ 
 ## Motivation
-
-  
 
 Although WebP images are not currently supported in all browsers, they are at least 25% smaller than PNG's or JPEG's. So, certain users can get a much better experience.
 
 Check the support tables on [Can I use](https://caniuse.com/#feat=webp)
 
-  
-
+ 
 ## Installation
 
   
 
 ```bash
-
 $ npm install imagemin-webp-webpack-plugin --save-dev
-
 ```
 
   
@@ -49,7 +39,7 @@ module.exports = {
     plugins: [new ImageminWebpWebpackPlugin()]
 };
 ```
-
+⚠ Keep in mind that plugin order matters, so usually you'd want to put it last.
   
   
 
@@ -72,7 +62,7 @@ Default:
 ```
 {
   config: [{
-    test: /\.(jpe?g|png)$/,
+    test: /\.(jpe?g|png)/,
     options: {
       quality:  75
     }

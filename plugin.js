@@ -47,7 +47,7 @@ class ImageminWebpWebpackPlugin {
 
                             return savedKB;
                         }).catch(err => {
-                            let customErr = new Error(`ImageminWebpWebpackPlugin: "${name}" wasn't converted, most likely because the conversion would result in a bigger file!`);
+                            let customErr = new Error(`ImageminWebpWebpackPlugin: "${name}" wasn't converted!`);
                             
                             nrOfImagesFailed++;
 

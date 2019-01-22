@@ -85,12 +85,13 @@ The main config of the plugin which controls how different file types are conver
 ⚠ The **options** object is actually the same one from the [imagemin-webp](https://www.npmjs.com/package/imagemin-webp) plugin so check their documentation for the available settings.
 
 #### overrideExtension
+
 Type: `boolean`<br>
 Default: `true`
 
-By default the plugin will override the original file extension, so you will get: image.png -> image.webp
+By default the plugin will override the original file extension, so you will get: `image.png` -> `image.webp`
 
-In case you want to concat '.webp' at the end of the file name, set the config value to false. Ex: image.png -> image.png.webp. It may be useful when using nginx or similar to serve .webp files if http-accept header contains webp adding a suffix to the current image. 
+In case you want to concat '.webp' at the end of the file name, set the config value to false. Ex: `image.png` -> `image.png.webp`. It may be useful when using nginx or similar to serve .webp files, if http-accept header contains webp just add a suffix to the requested image. 
 
 #### detailedLogs
 

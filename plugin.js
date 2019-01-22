@@ -12,12 +12,14 @@ class ImageminWebpWebpackPlugin {
                 quality: 75
             }
         }],
+        overrideExtension = true,
         detailedLogs = false,
         strict = true
     } = {}) {
         this.config = config;
         this.detailedLogs = detailedLogs;
         this.strict = strict;
+        this.overrideExtension = overrideExtension;
     }
 
     apply(compiler) {
@@ -28,7 +30,12 @@ class ImageminWebpWebpackPlugin {
             Promise.all(assetNames.map(name => {
                 for (let i = 0; i < this.config.length; i++) {
                     if (this.config[i].test.test(name)) {
-                        let nameWithoutExtension = name.split(".").slice(0, -1).join(".");
+                        let outputName = name;
+                        if (this.overrideExtension) {
+                            outputName = outputName.split(".").slice(0, -1).join(".");
+                        }
+                        outputName = `${outputName}.webp`;
+
                         let currentAsset = compilation.assets[name];
 
                         return imagemin.buffer(currentAsset.source(), {
@@ -39,8 +46,7 @@ class ImageminWebpWebpackPlugin {
                             if (this.detailedLogs) {
                                 console.log(GREEN, `${savedKB.toFixed(1)} KB saved from '${name}'`);
                             }
-
-                            compilation.assets[`${nameWithoutExtension}.webp`] = {
+                            compilation.assets[outputName] = {
                                 source: () => buffer,
                                 size: () => buffer.length
                             };

@@ -98,12 +98,20 @@ In case you want to concat '.webp' at the end of the file name, set the config v
 Type: `boolean`<br>
 Default: `false`
 
-By default the plugin will print 
+By default the plugin will print to the console
 
 1. the total number of megabytes saved by the webp images compared to the original ones
 2. the number of images that failed being converted
 
 This options tells the plugin to also log the size difference per converted image and the names of the images that failed conversion.
+
+#### silent
+
+Type: `boolean`<br>
+Default: `false`
+
+In case you don't want anything printed to the console set this option to false. <br>
+*see the `detailedLogs` option for what this plugin prints by dafault
 
 #### strict
 

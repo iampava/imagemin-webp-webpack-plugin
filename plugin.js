@@ -14,12 +14,14 @@ class ImageminWebpWebpackPlugin {
         }],
         overrideExtension = true,
         detailedLogs = false,
-        strict = true
+        strict = true,
+        silent = false
     } = {}) {
         this.config = config;
         this.detailedLogs = detailedLogs;
         this.strict = strict;
         this.overrideExtension = overrideExtension;
+        this.silent = silent;
     }
 
     apply(compiler) {
@@ -43,7 +45,7 @@ class ImageminWebpWebpackPlugin {
                         }).then((buffer) => {
                             let savedKB = (currentAsset.size() - buffer.length) / 1000;
 
-                            if (this.detailedLogs) {
+                            if (this.detailedLogs && !this.silent) {
                                 console.log(GREEN, `${savedKB.toFixed(1)} KB saved from '${name}'`);
                             }
                             compilation.assets[outputName] = {
@@ -69,17 +71,20 @@ class ImageminWebpWebpackPlugin {
                 }
                 return Promise.resolve(0);
             })).then(savedKBArr => {
-                let totalKBSaved = savedKBArr.reduce((acc, cur) => acc + cur, 0);
+                if(!this.silent) {
+                    let totalKBSaved = savedKBArr.reduce((acc, cur) => acc + cur, 0);
 
-                if (totalKBSaved < 100) {
-                    console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved)} KB saved`);
-                } else {
-                    console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved / 100) / 10} MB saved`);
+                    if (totalKBSaved < 100) {
+                        console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved)} KB saved`);
+                    } else {
+                        console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved / 100) / 10} MB saved`);
+                    }
+    
+                    if (nrOfImagesFailed > 0) {
+                        console.log(RED, `imagemin-webp-webpack-plugin: ${nrOfImagesFailed} images failed to convert to webp`);
+                    }
                 }
 
-                if (nrOfImagesFailed > 0) {
-                    console.log(RED, `imagemin-webp-webpack-plugin: ${nrOfImagesFailed} images failed to convert to webp`);
-                }
                 cb();
             });
         });

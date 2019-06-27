@@ -111,8 +111,7 @@ This options tells the plugin to also log the size difference per converted imag
 Type: `boolean`<br>
 Default: `false`
 
-In case you don't want anything printed to the console set this option to false. <br>
-*see the `detailedLogs` option for what this plugin prints by dafault
+In case you don't want anything printed to the console set this option to false. This will override the `detailedLogs` option. <br>
 
 #### strict
 

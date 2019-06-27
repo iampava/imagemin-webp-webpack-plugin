@@ -29,6 +29,14 @@ class ImageminWebpWebpackPlugin {
             let assetNames = Object.keys(compilation.assets);
             let nrOfImagesFailed = 0;
 
+            if(this.silent && this.detailedLogs) {
+                compilation.warnings.push(
+                    new Error(
+                        `ImageminWebpWebpackPlugin: both the 'silent' and 'detailedLogs' options are true. Overriding 'detailedLogs' and disabling all console output.`
+                    )
+                );
+            }
+
             Promise.all(assetNames.map(name => {
                 for (let i = 0; i < this.config.length; i++) {
                     if (this.config[i].test.test(name)) {

@@ -69,6 +69,7 @@ Default:
   }],
   overrideExtension: true,
   detailedLogs: false,
+  silent: false,
   strict: true
 }
 ```

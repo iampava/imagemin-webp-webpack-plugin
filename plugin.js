@@ -42,7 +42,10 @@ class ImageminWebpWebpackPlugin {
                     if (this.config[i].test.test(name)) {
                         let outputName = name;
                         if (this.overrideExtension) {
-                            outputName = outputName.split(".").slice(0, -1).join(".");
+                            const imageFilePathArray = name.split('/')
+                            const imageFilename = imageFilePathArray.slice(-1)[0]
+                            const newImageFilename = imageFilename.split(".").slice(0, -1).join(".");
+                            outputName = imageFilePathArray.slice(0, -1).concat(newImageFilename).join('/')
                         }
                         outputName = `${outputName}.webp`;
 

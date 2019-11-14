@@ -1,7 +1,8 @@
 # imagemin-webp-webpack-plugin | test project
 
-`npm run dev` ➡ development build + webpack-dev-server
-`npm run prod` ➡ production build
+`npm run dev` for development build + webpack-dev-server
+
+`npm run prod` for production build
 
 <hr/>
 

@@ -1,7 +1,7 @@
 # imagemin-webp-webpack-plugin
 
  
-**Webpack 4** plugin which converts images to the [WebP](https://developers.google.com/speed/webp/) format while also keeping the original files.
+**Webpack** plugin which converts images to the [WebP](https://developers.google.com/speed/webp/) format while also keeping the original files. Built for **webpack 4** but should work in previous versions as well.
 
 
 It uses [imagemin](https://www.npmjs.com/package/imagemin) and [imagemin-webp](https://www.npmjs.com/package/imagemin-webp) under the hood.
@@ -55,7 +55,7 @@ module.exports = {
 
   
 
-Type: `Object : {config: Array, detailedLogs: boolean, strict: boolean}`<br/>
+Type: `Object`<br/>
 
 Default:
 

@@ -25,7 +25,7 @@ class ImageminWebpWebpackPlugin {
     }
 
     apply(compiler) {
-        compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', (compilation, cb) => {
+        const onEmit = (compilation, cb) => {
             let assetNames = Object.keys(compilation.assets);
             let nrOfImagesFailed = 0;
 
@@ -95,7 +95,15 @@ class ImageminWebpWebpackPlugin {
 
                 cb();
             });
-        });
+        }
+
+        if (compiler.hooks) {
+            // webpack 4.x
+            compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', onEmit);
+        } else {
+            // older versions
+            compiler.plugin('emit', onEmit);
+        }
     }
 }
 

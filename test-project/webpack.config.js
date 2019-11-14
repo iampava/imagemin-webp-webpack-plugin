@@ -44,7 +44,8 @@ module.exports = ({ mode }) =>
                     }
                 ]),
                 new ImageminWebpWebpackPlugin({
-                    detailedLogs: true
+                    detailedLogs: true,
+                    overrideExtension: true
                 })
             ]
         },

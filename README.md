@@ -59,7 +59,7 @@ Type: `Object`<br/>
 
 Default:
 
-```
+```js
 {
   config: [{
     test: /\.(jpe?g|png)/,

@@ -24,6 +24,7 @@ class ImageminWebpWebpackPlugin {
         this.strict = strict;
         this.overrideExtension = overrideExtension;
         this.silent = silent;
+        this.convertedAssets = {};
     }
 
     apply(compiler) {
@@ -48,6 +49,10 @@ class ImageminWebpWebpackPlugin {
                             }
                             outputName = `${outputName}.webp`;
 
+                            if (this.convertedAssets[outputName]) {
+                                return 0;
+                            }
+
                             let currentAsset = compilation.assets[name];
 
                             return imagemin
@@ -60,6 +65,9 @@ class ImageminWebpWebpackPlugin {
                                     if (this.detailedLogs && !this.silent) {
                                         console.log(GREEN, `${savedKB.toFixed(1)} KB saved from '${name}'`);
                                     }
+
+                                    this.convertedAssets[outputName] = true;
+
                                     compilation.assets[outputName] = {
                                         source: () => buffer,
                                         size: () => buffer.length

@@ -1,8 +1,9 @@
 # imagemin-webp-webpack-plugin | test project
 
-`npm run dev` for development build + webpack-dev-server
+`npm install` **(both the root folder & this folder)**
 
-`npm run prod` for production build
+* `npm run dev` for development build + webpack-dev-server
+* `npm run prod` for production build
 
 <hr/>
 

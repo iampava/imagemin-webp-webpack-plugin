@@ -122,6 +122,13 @@ By default the webpack build will fail if any of the images that match your RegE
 
 This option tells the plugin to not crash the build and keep going :)
 
+
+## Other mentions
+
+* it doesn't re-convert images while developing
+* if you change the actual image but keep the name, somehow `webpack` is smart enough to detect this and it will re-convert just that image
+* there's a [test-project](https://github.com/iampava/imagemin-webp-webpack-plugin/tree/master/test-project) included in this repo for easy testing and tweaking of the plugin (in case you find bugs)
+
 <hr/>
 
 <p align="center"> Made with ❤ by <a href="https://iampava.com"> Pava </a></p>

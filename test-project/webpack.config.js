@@ -37,12 +37,12 @@ module.exports = ({ mode }) =>
                         collapseWhitespace: true
                     }
                 }),
-                new CopyWebpackPlugin([
-                    {
+                new CopyWebpackPlugin({
+                    patterns: [{
                         from: 'src/assets/',
                         to: 'assets/'
-                    }
-                ]),
+                    }]
+                }),
                 new ImageminWebpWebpackPlugin({
                     detailedLogs: true,
                     overrideExtension: true

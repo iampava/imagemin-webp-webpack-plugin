@@ -59,7 +59,13 @@ module.exports = ({ mode }) =>
                 }),
                 new ImageminWebpWebpackPlugin({
                     detailedLogs: true,
-                    overrideExtension: true
+                    overrideExtension: true,
+                    config: [{
+                        test: /\.(jpe?g|png|gif)/,
+                        options: {
+                          quality:  75
+                        }
+                    }],
                 })
             ]
         },

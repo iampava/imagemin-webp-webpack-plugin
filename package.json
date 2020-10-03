@@ -21,6 +21,7 @@
     "homepage": "https://github.com/iampava/imagemin-webp-webpack-plugin",
     "dependencies": {
         "imagemin": "^6.1.0",
+        "imagemin-gif2webp": "^3.0.0",
         "imagemin-webp": "^5.1.0"
     }
 }

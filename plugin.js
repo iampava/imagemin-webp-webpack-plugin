@@ -1,5 +1,6 @@
 const imagemin = require('imagemin');
 const webp = require('imagemin-webp');
+const gif2webp = require('imagemin-gif2webp');
 
 const GREEN = '\x1b[32m%s\x1b[0m';
 const RED = '\x1b[31m%s\x1b[0m';
@@ -8,8 +9,11 @@ class ImageminWebpWebpackPlugin {
     constructor({
         config = [
             {
-                test: /\.(jpe?g|png)/,
+                test: /\.(jpe?g|png|gif)/,
                 options: {
+                    quality: 75
+                },
+                gif2webpOptions: {
                     quality: 75
                 }
             }
@@ -52,7 +56,10 @@ class ImageminWebpWebpackPlugin {
 
                             return imagemin
                                 .buffer(currentAsset.source(), {
-                                    plugins: [webp(this.config[i].options)]
+                                    plugins: [
+                                        webp(this.config[i].options),
+                                        gif2webp(this.config[i].gif2webpOptions),
+                                    ]
                                 })
                                 .then(buffer => {
                                     let savedKB = (currentAsset.size() - buffer.length) / 1000;

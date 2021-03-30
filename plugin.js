@@ -25,90 +25,104 @@ class ImageminWebpWebpackPlugin {
         this.overrideExtension = overrideExtension;
         this.silent = silent;
     }
+    
+    onEmit(compilation, cb) {
+        let assetNames = Object.keys(compilation.assets);
+        let nrOfImagesFailed = 0;
 
-    apply(compiler) {
-        const onEmit = (compilation, cb) => {
-            let assetNames = Object.keys(compilation.assets);
-            let nrOfImagesFailed = 0;
+        if (this.silent && this.detailedLogs) {
+            compilation.warnings.push(new Error(`ImageminWebpWebpackPlugin: both the 'silent' and 'detailedLogs' options are true. Overriding 'detailedLogs' and disabling all console output.`));
+        }
 
-            if (this.silent && this.detailedLogs) {
-                compilation.warnings.push(new Error(`ImageminWebpWebpackPlugin: both the 'silent' and 'detailedLogs' options are true. Overriding 'detailedLogs' and disabling all console output.`));
-            }
+        Promise.all(
+            assetNames.map(name => {
+                for (let i = 0; i < this.config.length; i++) {
+                    if (this.config[i].test.test(name)) {
+                        let outputName = name;
+                        if (this.overrideExtension) {
+                            outputName = outputName
+                                .split('.')
+                                .slice(0, -1)
+                                .join('.');
+                        }
+                        outputName = `${outputName}.webp`;
 
-            Promise.all(
-                assetNames.map(name => {
-                    for (let i = 0; i < this.config.length; i++) {
-                        if (this.config[i].test.test(name)) {
-                            let outputName = name;
-                            if (this.overrideExtension) {
-                                outputName = outputName
-                                    .split('.')
-                                    .slice(0, -1)
-                                    .join('.');
-                            }
-                            outputName = `${outputName}.webp`;
+                        let currentAsset = compilation.assets[name];
 
-                            let currentAsset = compilation.assets[name];
+                        return imagemin
+                            .buffer(currentAsset.source(), {
+                                plugins: [webp(this.config[i].options)]
+                            })
+                            .then(buffer => {
+                                let savedKB = (currentAsset.size() - buffer.length) / 1000;
 
-                            return imagemin
-                                .buffer(currentAsset.source(), {
-                                    plugins: [webp(this.config[i].options)]
-                                })
-                                .then(buffer => {
-                                    let savedKB = (currentAsset.size() - buffer.length) / 1000;
-
-                                    if (this.detailedLogs && !this.silent) {
-                                        console.log(GREEN, `${savedKB.toFixed(1)} KB saved from '${name}'`);
-                                    }
+                                if (this.detailedLogs && !this.silent) {
+                                    console.log(GREEN, `${savedKB.toFixed(1)} KB saved from '${name}'`);
+                                }
+                                if (compilation.emitAsset) {
+                                    compilation.emitAsset(outputName, {
+                                        source: () => buffer,
+                                        size: () => buffer.length
+                                    })
+                                } else {
                                     compilation.assets[outputName] = {
                                         source: () => buffer,
                                         size: () => buffer.length
                                     };
+                                }
 
-                                    return savedKB;
-                                })
-                                .catch(err => {
-                                    let customErr = new Error(`ImageminWebpWebpackPlugin: "${name}" wasn't converted!`);
+                                return savedKB;
+                            })
+                            .catch(err => {
+                                let customErr = new Error(`ImageminWebpWebpackPlugin: "${name}" wasn't converted!`);
 
-                                    nrOfImagesFailed++;
+                                nrOfImagesFailed++;
 
-                                    if (this.strict) {
-                                        compilation.errors.push(err, customErr);
-                                    } else if (this.detailedLogs) {
-                                        compilation.warnings.push(err, customErr);
-                                    }
+                                if (this.strict) {
+                                    compilation.errors.push(err, customErr);
+                                } else if (this.detailedLogs) {
+                                    compilation.warnings.push(err, customErr);
+                                }
 
-                                    return 0;
-                                });
-                        }
-                    }
-                    return Promise.resolve(0);
-                })
-            ).then(savedKBArr => {
-                if (!this.silent) {
-                    let totalKBSaved = savedKBArr.reduce((acc, cur) => acc + cur, 0);
-
-                    if (totalKBSaved < 100) {
-                        console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved)} KB saved`);
-                    } else {
-                        console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved / 100) / 10} MB saved`);
-                    }
-
-                    if (nrOfImagesFailed > 0) {
-                        console.log(RED, `imagemin-webp-webpack-plugin: ${nrOfImagesFailed} images failed to convert to webp`);
+                                return 0;
+                            });
                     }
                 }
+                return Promise.resolve(0);
+            })
+        ).then(savedKBArr => {
+            if (!this.silent) {
+                let totalKBSaved = savedKBArr.reduce((acc, cur) => acc + cur, 0);
 
-                cb();
-            });
-        };
+                if (totalKBSaved < 100) {
+                    console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved)} KB saved`);
+                } else {
+                    console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved / 100) / 10} MB saved`);
+                }
 
-        if (compiler.hooks) {
+                if (nrOfImagesFailed > 0) {
+                    console.log(RED, `imagemin-webp-webpack-plugin: ${nrOfImagesFailed} images failed to convert to webp`);
+                }
+            }
+
+            cb();
+        });
+    }
+    
+    apply(compiler) {
+        if (compiler.hooks && compiler.hooks.processAssets) {
+            // webpack 5.x
+            compiler.hooks.processAssets.tapAsync({
+                name: 'ImageminWebpWebpackPlugin',
+                stage: compiler.PROCESS_ASSETS_STAGE_OPTIMIZE,
+                additionalAssets: true
+            }, this.onEmit.bind(this));
+        } else if (compiler.hooks) {
             // webpack 4.x
-            compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', onEmit);
+            compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', this.onEmit.bind(this));
         } else {
             // older versions
-            compiler.plugin('emit', onEmit);
+            compiler.plugin('emit', this.onEmit.bind(this));
         }
     }
 }

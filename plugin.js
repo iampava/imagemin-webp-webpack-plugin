@@ -33,6 +33,11 @@ class ImageminWebpWebpackPlugin {
         if (this.silent && this.detailedLogs) {
             compilation.warnings.push(new Error(`ImageminWebpWebpackPlugin: both the 'silent' and 'detailedLogs' options are true. Overriding 'detailedLogs' and disabling all console output.`));
         }
+        
+        if (assetNames.length === 0) {
+          cb();
+          return;
+        }
 
         Promise.all(
             assetNames.map(name => {
@@ -115,8 +120,7 @@ class ImageminWebpWebpackPlugin {
           compiler.hooks.thisCompilation.tap('ImageminWebpWebpackPlugin', compilation => {
             compilation.hooks.processAssets.tapAsync({
               name: 'ImageminWebpWebpackPlugin',
-              stage: compiler.PROCESS_ASSETS_STAGE_OPTIMIZE,
-              additionalAssets: true
+              stage: compiler.PROCESS_ASSETS_STAGE_OPTIMIZE
             }, (assets, cb) => this.onEmit(compilation, cb));
           });
         } else if (compiler.hooks) {

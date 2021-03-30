@@ -110,13 +110,15 @@ class ImageminWebpWebpackPlugin {
     }
     
     apply(compiler) {
-        if (compiler.hooks && compiler.hooks.processAssets) {
-            // webpack 5.x
-            compiler.hooks.processAssets.tapAsync({
-                name: 'ImageminWebpWebpackPlugin',
-                stage: compiler.PROCESS_ASSETS_STAGE_OPTIMIZE,
-                additionalAssets: true
-            }, this.onEmit.bind(this));
+        if (compiler.hooks && compiler.hooks.thisCompilation) {
+          // webpack 5.x
+          compiler.hooks.thisCompilation.tap('ImageminWebpWebpackPlugin', compilation => {
+            compilation.hooks.processAssets.tapAsync({
+              name: 'ImageminWebpWebpackPlugin',
+              stage: compiler.PROCESS_ASSETS_STAGE_OPTIMIZE,
+              additionalAssets: true
+            }, (assets, cb) => this.onEmit(compilation, cb));
+          });
         } else if (compiler.hooks) {
             // webpack 4.x
             compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', this.onEmit.bind(this));

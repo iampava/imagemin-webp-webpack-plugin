@@ -4,12 +4,12 @@
 **Webpack** plugin which converts images to the [WebP](https://developers.google.com/speed/webp/) format while also keeping the original files. Built for **webpack 4** but should work in previous versions as well.
 
 
-It uses [imagemin](https://www.npmjs.com/package/imagemin) and [imagemin-webp](https://www.npmjs.com/package/imagemin-webp) under the hood.
+It uses [imagemin](https://www.npmjs.com/package/imagemin), [imagemin-webp](https://www.npmjs.com/package/imagemin-webp) and [imagemin-gif2webp](https://www.npmjs.com/package/imagemin-gif2webp) under the hood.
 
  
 ## Motivation
 
-Although WebP images are not currently supported in all browsers, they are at least 25% smaller than PNG's or JPEG's. So, certain users can get a much better experience.
+Although WebP images are not currently supported in all browsers, they are at least 25% smaller than PNG's or JPEG's. So, certain users can get a much better experience. WebP also supports Gif-like functionality so this plugin also works for GIF images.
 
 Check the support tables on [Can I use](https://caniuse.com/#feat=webp)
 
@@ -80,7 +80,7 @@ Type ```Array<Object: {test, options} >```
 
 The main config of the plugin which controls how different file types are converted. Each item in the array is an object with 2 properties:
 
-* **test** - a RegExp selecting just certain images
+* **test** - a RegExp selecting just certain images. Supported image formats are **JPG**, **PNG** and **GIF**.
 * **options** -the converting options for the images that pass the above RegExp
 
 ⚠ The **options** object is actually the same one from the [imagemin-webp](https://www.npmjs.com/package/imagemin-webp) plugin so check their documentation for the available settings.

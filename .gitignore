@@ -1,3 +1,4 @@
 node_modules/
 test-project/node_modules/
 test-project/dist/
+test-project/plugin.js

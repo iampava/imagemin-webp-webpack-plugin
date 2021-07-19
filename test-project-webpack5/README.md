@@ -1,6 +1,6 @@
-# imagemin-webp-webpack-plugin | Webpack 4 test project
+# imagemin-webp-webpack-plugin | Webpack 5 test project
 
-Test project for verifying whether the plugin works as expected in a Webpack 4 environment.
+Test project for verifying whether the plugin works as expected in a Webpack 5 environment.
 
 
 `npm install` **(both the root folder & this folder)**

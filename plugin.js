@@ -64,11 +64,8 @@ class ImageminWebpWebpackPlugin {
                                     if (this.detailedLogs && !this.silent) {
                                         console.log(GREEN, `${savedKB.toFixed(1)} KB saved from '${name}'`);
                                     }
-                                    compilation.assets[outputName] = {
-                                        source: () => buffer,
-                                        size: () => buffer.length
-                                    };
 
+                                    emitAsset(outputName, buffer, compilation);
                                     return savedKB;
                                 })
                                 .catch(err => {
@@ -107,13 +104,42 @@ class ImageminWebpWebpackPlugin {
             });
         };
 
-        if (compiler.hooks) {
-            // webpack 4.x
-            compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', onEmit);
-        } else {
-            // older versions
-            compiler.plugin('emit', onEmit);
-        }
+        hookPlugin(compiler, onEmit);
+    }
+}
+
+function hookPlugin(compiler, onEmit) {
+    if (compiler.hooks && compiler.hooks.thisCompilation && compiler.hooks.processAssets) {
+        // webpack 5.x
+        compiler.hooks.thisCompilation.tap('ImageminWebpWebpackPlugin', compilation => {
+            compilation.hooks.processAssets.tapAsync({
+                name: 'ImageminWebpWebpackPlugin',
+                stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
+            }, (assets, cb) => onEmit(compilation, cb));
+        })
+    }
+    else if (compiler.hooks) {
+        // webpack 4.x
+        compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', onEmit);
+    } else {
+        // older versions
+        compiler.plugin('emit', onEmit);
+    }
+}
+
+function emitAsset(name, buffer, compilation) {
+    if (compilation.emitAsset) {
+        // webpack 5.x
+        compilation.emitAsset(name, {
+            source: () => buffer,
+            size: () => buffer.length
+        })
+    } else {
+        // webpack 4.x & 3.x
+        compilation.assets[outputName] = {
+            source: () => buffer,
+            size: () => buffer.length
+        };
     }
 }
 

@@ -136,7 +136,7 @@ function emitAsset(name, buffer, compilation) {
         })
     } else {
         // webpack 4.x & 3.x
-        compilation.assets[outputName] = {
+        compilation.assets[name] = {
             source: () => buffer,
             size: () => buffer.length
         };

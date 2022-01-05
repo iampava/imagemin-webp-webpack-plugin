@@ -22,6 +22,6 @@
     "dependencies": {
         "imagemin": "^7.0.1",
         "imagemin-gif2webp": "^3.0.0",
-        "imagemin-webp": "^6.0.0"
+        "imagemin-webp": "^7.0.0"
     }
 }

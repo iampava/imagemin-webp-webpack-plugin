@@ -1,5 +1,9 @@
 # Changelog
 
+* Unreleased | 26/01.2022
+    - quality value is now taken from options, from the same place as for png/jpeg
+    - added typings for typescript
+
 * V3.3.6 | 19/07.2021
     - added support for Webpack 5 (https://github.com/iampava/imagemin-webp-webpack-plugin/issues/38)
 

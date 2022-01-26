@@ -17,11 +17,15 @@ Check the support tables on [Can I use](https://caniuse.com/#feat=webp)
 ## Installation
 
   
-
+NPM:
 ```bash
 $ npm install imagemin-webp-webpack-plugin --save-dev
 ```
 
+Yarn:
+```bash
+$ yarn add imagemin-webp-webpack-plugin --dev
+```
   
 
 ## Usage
@@ -31,14 +35,24 @@ $ npm install imagemin-webp-webpack-plugin --save-dev
 In order to use this plugin, add it to your **webpack config**.
 
   
-
+JavaScript:
 ```js
-const ImageminWebpWebpackPlugin= require("imagemin-webp-webpack-plugin");
+const ImageminWebpWebpackPlugin = require("imagemin-webp-webpack-plugin");
 
 module.exports = {
     plugins: [new ImageminWebpWebpackPlugin()]
 };
 ```
+
+TypeScript
+```typescript
+import ImageminWebpWebpackPlugin from 'imagemin-webpack-plugin';
+
+export const plugins = [
+    new ImageminWebpWebpackPlugin()
+]
+```
+
 ⚠ Keep in mind that plugin order matters, so usually you'd want to put it last.
   
   
@@ -55,7 +69,7 @@ module.exports = {
 
   
 
-Type: `Object`<br/>
+Type: `ImageminWebpWebpackPluginOptions`<br/>
 
 Default:
 
@@ -75,13 +89,13 @@ Default:
 ```
 
 #### config
-Type ```Array<Object: {test, options} >```
+Type ```Array<WebpConfig: {test, options}>```
 
 
 The main config of the plugin which controls how different file types are converted. Each item in the array is an object with 2 properties:
 
 * **test** - a RegExp selecting just certain images. Supported image formats are **JPG**, **PNG** and **GIF**.
-* **options** -the converting options for the images that pass the above RegExp
+* **options** - the converting options for the images that pass the above RegExp
 
 ⚠ The **options** object is actually the same one from the [imagemin-webp](https://www.npmjs.com/package/imagemin-webp) plugin so check their documentation for the available settings.
 
@@ -90,7 +104,7 @@ The main config of the plugin which controls how different file types are conver
 Type: `boolean`<br>
 Default: `true`
 
-By default the plugin will override the original file extension, so you will get: `image.png` -> `image.webp`
+By default, the plugin will override the original file extension, so you will get: `image.png` -> `image.webp`
 
 In case you want to concat '.webp' at the end of the file name, set the config value to false. Ex: `image.png` -> `image.png.webp`. It may be useful when using nginx or similar to serve .webp files, if http-accept header contains webp just add a suffix to the requested image. 
 
@@ -99,7 +113,7 @@ In case you want to concat '.webp' at the end of the file name, set the config v
 Type: `boolean`<br>
 Default: `false`
 
-By default the plugin will print to the console
+By default, the plugin will print to the console
 
 1. the total number of megabytes saved by the webp images compared to the original ones
 2. the number of images that failed being converted

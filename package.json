@@ -9,6 +9,7 @@
     },
     "license": "MIT",
     "main": "plugin.js",
+    "types": "index.d.ts",
     "keywords": [
         "webpack",
         "plugin",
@@ -23,5 +24,8 @@
         "imagemin": "^7.0.1",
         "imagemin-gif2webp": "^3.0.0",
         "imagemin-webp": "^6.0.0"
+    },
+    "devDependencies": {
+        "@types/imagemin-webp": "^7.0.0"
     }
 }

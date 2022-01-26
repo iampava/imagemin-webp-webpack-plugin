@@ -55,7 +55,7 @@ class ImageminWebpWebpackPlugin {
                                 .buffer(currentAsset.source(), {
                                     plugins: [
                                         webp(this.config[i].options),
-                                        gif2webp(this.config[i].quality),
+                                        gif2webp(this.config[i].options.quality),
                                     ]
                                 })
                                 .then(buffer => {

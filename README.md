@@ -122,7 +122,7 @@ By default the webpack build will fail if any of the images that match your RegE
 
 This option tells the plugin to not crash the build and keep going :)
 
-#### enableCache
+#### skipUnchanged
 
 Type: `boolean`<br>
 Default: `false`

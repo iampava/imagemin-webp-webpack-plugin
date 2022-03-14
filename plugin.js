@@ -20,14 +20,14 @@ class ImageminWebpWebpackPlugin {
         detailedLogs = false,
         strict = true,
         silent = false,
-        enableCache = false,
+        skipUnchanged = false,
     } = {}) {
         this.config = config;
         this.detailedLogs = detailedLogs;
         this.strict = strict;
         this.overrideExtension = overrideExtension;
         this.silent = silent;
-        this.enableCache = enableCache;
+        this.skipUnchanged = skipUnchanged;
         this.sourceVersions = {};
         this.savedKBs = {};
     }
@@ -58,7 +58,7 @@ class ImageminWebpWebpackPlugin {
                             let currentAsset = compilation.assets[name];
 
                             let hash = undefined;
-                            if (this.enableCache) {
+                            if (this.skipUnchanged) {
                                 hash = crypto.createHash('sha256').update(currentAsset.source()).digest('hex');
 
                                 if (this.sourceVersions[outputName] === hash) {
@@ -87,7 +87,7 @@ class ImageminWebpWebpackPlugin {
 
                                     emitAsset(outputName, buffer, compilation);
                                     
-                                    if (this.enableCache && hash !== undefined) {
+                                    if (this.skipUnchanged && hash !== undefined) {
                                         this.savedKBs[hash] = savedKB;
                                     }
 

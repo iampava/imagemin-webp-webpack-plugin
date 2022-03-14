@@ -1,5 +1,8 @@
 # Changelog
 
+* Unreleased | 14/03.2022
+    - added `enableCache` option
+
 * V3.3.6 | 19/07.2021
     - added support for Webpack 5 (https://github.com/iampava/imagemin-webp-webpack-plugin/issues/38)
 

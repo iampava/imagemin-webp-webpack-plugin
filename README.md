@@ -122,6 +122,13 @@ By default the webpack build will fail if any of the images that match your RegE
 
 This option tells the plugin to not crash the build and keep going :)
 
+#### enableCache
+
+Type: `boolean`<br>
+Default: `false`
+
+If enabled, unchanged images are skipped during fast-refresh, and only new images are converted.
+
 ## Compatibility & known issues
 
 Recently we updated this plugin to make it compatible with **webpack 5**. Originally it was built for **webpack 4** and earlier versions, so I expect it would be compatible no matter the project :)

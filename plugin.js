@@ -1,6 +1,7 @@
 const imagemin = require('imagemin');
 const webp = require('imagemin-webp');
 const gif2webp = require('imagemin-gif2webp');
+const crypto = require('crypto');
 
 const GREEN = '\x1b[32m%s\x1b[0m';
 const RED = '\x1b[31m%s\x1b[0m';
@@ -18,19 +19,24 @@ class ImageminWebpWebpackPlugin {
         overrideExtension = true,
         detailedLogs = false,
         strict = true,
-        silent = false
+        silent = false,
+        skipUnchanged = false,
     } = {}) {
         this.config = config;
         this.detailedLogs = detailedLogs;
         this.strict = strict;
         this.overrideExtension = overrideExtension;
         this.silent = silent;
+        this.skipUnchanged = skipUnchanged;
+        this.sourceVersions = {};
+        this.savedKBs = {};
     }
 
     apply(compiler) {
         const onEmit = (compilation, cb) => {
             let assetNames = Object.keys(compilation.assets);
             let nrOfImagesFailed = 0;
+            let nrOfImagesSkipped = 0;
 
             if (this.silent && this.detailedLogs) {
                 compilation.warnings.push(new Error(`ImageminWebpWebpackPlugin: both the 'silent' and 'detailedLogs' options are true. Overriding 'detailedLogs' and disabling all console output.`));
@@ -51,6 +57,20 @@ class ImageminWebpWebpackPlugin {
 
                             let currentAsset = compilation.assets[name];
 
+                            let hash = undefined;
+                            if (this.skipUnchanged) {
+                                hash = crypto.createHash('sha256').update(currentAsset.source()).digest('hex');
+
+                                if (this.sourceVersions[outputName] === hash) {
+                                    nrOfImagesSkipped++;
+                                    if (this.detailedLogs && !this.silent) {
+                                        console.log(GREEN, `Unchanged and skipped: '${name}'`);
+                                    }
+                                    return Promise.resolve(this.savedKBs[hash] ?? 0);
+                                }
+                                this.sourceVersions[outputName] = hash;
+                            }
+
                             return imagemin
                                 .buffer(currentAsset.source(), {
                                     plugins: [
@@ -66,6 +86,11 @@ class ImageminWebpWebpackPlugin {
                                     }
 
                                     emitAsset(outputName, buffer, compilation);
+                                    
+                                    if (this.skipUnchanged && hash !== undefined) {
+                                        this.savedKBs[hash] = savedKB;
+                                    }
+
                                     return savedKB;
                                 })
                                 .catch(err => {
@@ -95,6 +120,9 @@ class ImageminWebpWebpackPlugin {
                         console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved / 100) / 10} MB saved`);
                     }
 
+                    if (nrOfImagesSkipped > 0) {
+                        console.log(GREEN, `imagemin-webp-webpack-plugin: ${nrOfImagesSkipped} images were unchanged and skipped`);
+                    }
                     if (nrOfImagesFailed > 0) {
                         console.log(RED, `imagemin-webp-webpack-plugin: ${nrOfImagesFailed} images failed to convert to webp`);
                     }

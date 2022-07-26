@@ -109,12 +109,12 @@ class ImageminWebpWebpackPlugin {
 }
 
 function hookPlugin(compiler, onEmit) {
-    if (compiler.hooks && compiler.hooks.thisCompilation && compiler.hooks.processAssets) {
+    if (compiler.wepack) {
         // webpack 5.x
         compiler.hooks.thisCompilation.tap('ImageminWebpWebpackPlugin', compilation => {
             compilation.hooks.processAssets.tapAsync({
                 name: 'ImageminWebpWebpackPlugin',
-                stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
+                stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE
             }, (assets, cb) => onEmit(compilation, cb));
         })
     }

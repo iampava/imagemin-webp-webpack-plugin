@@ -3,6 +3,7 @@ const webp = require('imagemin-webp');
 const gif2webp = require('imagemin-gif2webp');
 
 const GREEN = '\x1b[32m%s\x1b[0m';
+const YELLOW = "\x1b[33m%s\x1b[0m"
 const RED = '\x1b[31m%s\x1b[0m';
 
 class ImageminWebpWebpackPlugin {
@@ -17,11 +18,13 @@ class ImageminWebpWebpackPlugin {
         ],
         overrideExtension = true,
         detailedLogs = false,
+        discardLarger = false,
         strict = true,
         silent = false
     } = {}) {
         this.config = config;
         this.detailedLogs = detailedLogs;
+        this.discardLarger = discardLarger;
         this.strict = strict;
         this.overrideExtension = overrideExtension;
         this.silent = silent;
@@ -31,6 +34,7 @@ class ImageminWebpWebpackPlugin {
         const onEmit = (compilation, cb) => {
             let assetNames = Object.keys(compilation.assets);
             let nrOfImagesFailed = 0;
+            let nrOfImagesDiscarded = 0;
 
             if (this.silent && this.detailedLogs) {
                 compilation.warnings.push(new Error(`ImageminWebpWebpackPlugin: both the 'silent' and 'detailedLogs' options are true. Overriding 'detailedLogs' and disabling all console output.`));
@@ -60,6 +64,16 @@ class ImageminWebpWebpackPlugin {
                                 })
                                 .then(buffer => {
                                     let savedKB = (currentAsset.size() - buffer.length) / 1000;
+
+                                    if (this.discardLarger && buffer.length > currentAsset.size()) {
+                                        if (!this.silent) {
+                                            console.log(YELLOW, `WebP from '${name}' was larger than its source file and discarded`);
+                                        }
+
+                                        nrOfImagesDiscarded++;
+
+                                        return 0;
+                                    }
 
                                     if (this.detailedLogs && !this.silent) {
                                         console.log(GREEN, `${savedKB.toFixed(1)} KB saved from '${name}'`);
@@ -93,6 +107,10 @@ class ImageminWebpWebpackPlugin {
                         console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved)} KB saved`);
                     } else {
                         console.log(GREEN, `imagemin-webp-webpack-plugin: ${Math.floor(totalKBSaved / 100) / 10} MB saved`);
+                    }
+
+                    if (nrOfImagesDiscarded > 0) {
+                        console.log(YELLOW, `imagemin-webp-webpack-plugin: ${nrOfImagesDiscarded} WebP images were discarded because their source files were smaller`);
                     }
 
                     if (nrOfImagesFailed > 0) {

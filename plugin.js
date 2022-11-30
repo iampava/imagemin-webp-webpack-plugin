@@ -109,18 +109,20 @@ class ImageminWebpWebpackPlugin {
 }
 
 function hookPlugin(compiler, onEmit) {
-    if (compiler.hooks && compiler.hooks.thisCompilation && compiler.hooks.processAssets) {
-        // webpack 5.x
+    if (compiler.hooks) {
+        // wait for compilation to start before detecting asset support
         compiler.hooks.thisCompilation.tap('ImageminWebpWebpackPlugin', compilation => {
-            compilation.hooks.processAssets.tapAsync({
-                name: 'ImageminWebpWebpackPlugin',
-                stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE
-            }, (assets, cb) => onEmit(compilation, cb));
+            if (compilation.hooks.processAssets)
+                // webpack 5.x
+                compilation.hooks.processAssets.tapAsync({
+                    name: 'ImageminWebpWebpackPlugin',
+                    stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_DERIVED
+                }, (assets, cb) => onEmit(compilation, cb));
+            else {
+                // webpack 4.x
+                compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', onEmit);
+            }
         })
-    }
-    else if (compiler.hooks) {
-        // webpack 4.x
-        compiler.hooks.emit.tapAsync('ImageminWebpWebpackPlugin', onEmit);
     } else {
         // older versions
         compiler.plugin('emit', onEmit);
